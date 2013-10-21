@@ -4,40 +4,64 @@ import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Scanner;
 
 import facebook4j.Facebook;
+import facebook4j.FacebookException;
 import facebook4j.FacebookFactory;
 import facebook4j.auth.AccessToken;
 
 public class FacebookLogin {
 
+	Scanner leitor = new Scanner(System.in).useDelimiter(System.getProperty("line.separator"));
+	
 	public boolean login() {
 		Facebook facebook = new FacebookFactory().getInstance();
 		facebook.setOAuthAppId("203900246459306",
 				"1cd7277edca0e80784ef05fae547b608");
 		facebook.setOAuthPermissions("email,publish_stream");
+		
+		getFacebookToken(facebook);
+		
+		System.out.println("Digite o código (code=) da URL:");
+		
+		String token = leitor.nextLine();
+		
+		AccessToken aT = null;
+		try {
+			aT = facebook.getOAuthAccessToken(token);
+		} catch (FacebookException e) {
+			e.printStackTrace();
+		}
 
-		String token = getFacebookToken();
-
-		facebook.setOAuthAccessToken(new AccessToken(token, null));
+		facebook.setOAuthAccessToken(aT);
+		System.out.println(aT.toString());
+		try {
+			facebook.postStatusMessage("Funcionou!!!!!!");
+		} catch (FacebookException e) {
+			e.printStackTrace();
+		}
+		
 
 		return true;
 	}
-
-	String getFacebookToken() {
+/*+		System.out
++				.println("Acesse o link: "
++						+ facebook.getOAuthAuthorizationURL("http://gustavomaestri.com"));
+"https://www.facebook.com/dialog/oauth?app_id=203900246459306&redirect_uri=http://gustavomaestri.com"
+*/
+	void getFacebookToken(Facebook fb) {
 
 		Desktop desktop = Desktop.getDesktop();
 		URI uri;
 		try {
-			uri = new URI(
-					"https://www.facebook.com/dialog/oauth?app_id=203900246459306&redirect_uri=http://gustavomaestri.com");
+			uri = new URI(fb.getOAuthAuthorizationURL("http://gustavomaestri.com"));
 			desktop.browse(uri);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		} catch (URISyntaxException use) {
 			use.printStackTrace();
 		}
-		return null;
 	}
 
 }
