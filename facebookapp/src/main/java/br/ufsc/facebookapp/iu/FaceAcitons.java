@@ -32,7 +32,7 @@ public class FaceAcitons {
 	{
 		String f = "";
 		for (int i= 0; i< 50; i++)
-			f = "\n" + friends.get(i).getName();
+			f += "\n" + friends.get(i).getName();
 		return f;
 	}
 
@@ -41,8 +41,8 @@ public class FaceAcitons {
 		String f = "";
 		for (int i= 0; i< 10; i++)
 		{
-			f = "\n" + feed.get(i).getName();
-			f = "\n" + feed.get(i).getMessage() + "\n";
+			f += "\n" + feed.get(i).getName();
+			f += "\n" + feed.get(i).getMessage() + "\n";
 		}
 		return f;
 	}
