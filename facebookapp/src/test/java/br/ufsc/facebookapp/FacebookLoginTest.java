@@ -12,11 +12,4 @@ public class FacebookLoginTest extends TestCase {
 		assertTrue(logded);
 	}
 
-	public void testGetAuthToken() {
-		FacebookLogin facebookLogin = new FacebookLogin();
-		String token = facebookLogin.getFacebookToken();
-
-		assertNotNull(token);
-	}
-
 }

@@ -38,7 +38,7 @@ public class App
 							// TODO Auto-generated catch block
         					System.out.println("Erro na conecção com o Facebook.");
         				}
-        				System.out.println(fc.newsFeed(feed));
+        				System.out.println(feed);
         			}
         				break;
         			

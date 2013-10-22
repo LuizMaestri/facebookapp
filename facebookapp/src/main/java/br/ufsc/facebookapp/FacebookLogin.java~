@@ -27,7 +27,7 @@ public class FacebookLogin {
 		
 		getFacebookToken(facebook);
 		
-		System.out.println("Digite o código (após 'code=') da URL:");
+		System.out.println("Digite o código (code=) da URL:");
 		
 		String token = leitor.nextLine();
 		
@@ -39,7 +39,13 @@ public class FacebookLogin {
 		}
 
 		facebook.setOAuthAccessToken(aT);
-		System.out.println(aT.toString());		
+		System.out.println(aT.toString());
+		try {
+			facebook.postStatusMessage("Obrigado por usar nosso app.");
+		} catch (FacebookException e) {
+			e.printStackTrace();
+		}
+		
 
 		return true;
 	}
