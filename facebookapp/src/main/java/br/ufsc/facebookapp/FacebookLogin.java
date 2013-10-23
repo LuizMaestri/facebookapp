@@ -25,11 +25,11 @@ public class FacebookLogin {
 				"1cd7277edca0e80784ef05fae547b608");
 		facebook.setOAuthPermissions("email,publish_stream,read_stream");
 		
-		getFacebookToken(facebook);
+		facebookTokenGenerator(getFacebook());
 		
 		System.out.println("Digite o código (após 'code=') da URL:");
 		
-		String token = leitor.nextLine();
+		String token = getFacebookToken(leitor.nextLine());
 		
 		AccessToken aT = null;
 		try {
@@ -38,15 +38,12 @@ public class FacebookLogin {
 			System.out.println("Código incorreto");
 		}
 
-		facebook.setOAuthAccessToken(aT);
-		System.out.println(aT.toString());		
+		facebook.setOAuthAccessToken(aT);		
 
 		return true;
 	}
-/*+		System.out.println("Acesse o link:" + facebook.getOAuthAuthorizationURL("http://gustavomaestri.com"));
-"https://www.facebook.com/dialog/oauth?app_id=203900246459306&redirect_uri=http://gustavomaestri.com"
-*/
-	void getFacebookToken(Facebook fb) {
+
+	void facebookTokenGenerator(Facebook fb) {
 
 		Desktop desktop = Desktop.getDesktop();
 		URI uri;
@@ -60,4 +57,8 @@ public class FacebookLogin {
 		}
 	}
 
+	String getFacebookToken(String url)
+	{
+		return url.substring(30);
+	}
 }
