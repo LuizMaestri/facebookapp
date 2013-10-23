@@ -23,7 +23,7 @@ public class FacebookLogin {
 		facebook = new FacebookFactory().getInstance();
 		facebook.setOAuthAppId("203900246459306",
 				"1cd7277edca0e80784ef05fae547b608");
-		facebook.setOAuthPermissions("email,publish_stream");
+		facebook.setOAuthPermissions("email,publish_stream,read_stream");
 		
 		getFacebookToken(facebook);
 		
