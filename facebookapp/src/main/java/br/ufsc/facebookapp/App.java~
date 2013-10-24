@@ -16,15 +16,15 @@ public class App
         TextInterface iu = new TextInterface();
         FaceAcitons fc= null;
         Facebook face;
-        controle1 = iu.interfaceLogin();
-        if (controle1 ==1)
+
+        if (iu.interfaceLogin() ==1)
         {
         	if(log.login())
         	{
 			iu.sussesso(5);
         		fc = new FaceAcitons();        	
         		face = log.getFacebook();
-        		while (controle1 != 4)
+        		while (true)
         		{
 
         			switch (iu.interfaceLoged())
@@ -35,7 +35,6 @@ public class App
         				try {
 							feed = face.getHome();
 						} catch (FacebookException e) {
-							// TODO Auto-generated catch block
         					System.out.println("Erro na conecção com o Facebook.");
         				}
         				System.out.println(fc.newsFeed(feed));
@@ -53,7 +52,7 @@ public class App
         				try {
         					face.postStatusMessage(s);
         				} catch (FacebookException e) {
-        					e.printStackTrace();
+        					System.out.println("Erro na conecção com o Facebook.");
         				}
         				iu.sussesso(2);
         			}
@@ -67,7 +66,7 @@ public class App
         				} catch (FacebookException e){
         					System.out.println("Erro na conecção com o Facebook.");
         				}
-        				System.out.println(d);//fc.friendList(d)
+        				System.out.println(fc.friendList(d));
         			}
         				break;
         			
@@ -83,6 +82,9 @@ public class App
         	}
         }
         else
-        		System.exit(controle1);
+       	{
+        	iu.sussesso(4);
+        	System.exit(2);
+        }
     }
 }

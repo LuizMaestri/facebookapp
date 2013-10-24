@@ -48,6 +48,7 @@ public class App
         					s = fc.postar();
         			} catch (PostEmBranco e) {
         				System.out.println("Você não pode postar em branco");
+					break;
         			}
         				try {
         					face.postStatusMessage(s);
@@ -82,6 +83,9 @@ public class App
         	}
         }
         else
-        		System.exit(2);
+       	{
+        	iu.sussesso(4);
+        	System.exit(2);
+        }
     }
 }

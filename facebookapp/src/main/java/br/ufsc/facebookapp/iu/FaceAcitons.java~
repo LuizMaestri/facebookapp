@@ -41,8 +41,11 @@ public class FaceAcitons {
 		String f = "";
 		for (int i= 0; i< 10; i++)
 		{
-			f += "\n" + feed.get(i).getName();
-			f += "\n" + feed.get(i).getMessage() + "\n";
+			f += "\n" + feed.get(i).getFrom().getName() + ":";
+			if (feed.get(i).getMessage() != null)
+				f += "\n" + feed.get(i).getMessage() + "\n";
+			else
+				f +="\n'Nota do programador:' Ainda não conseguimos mostrar fotos, perdão.\n";
 		}
 		return f;
 	}

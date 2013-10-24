@@ -16,9 +16,18 @@ public class FacebookLogin {
 	Facebook facebook;
 	Scanner leitor = new Scanner(System.in).useDelimiter(System.getProperty("line.separator"));
 	
+	/**
+     	* Retorna o atributo facebook da classe FacebookLogin
+     	* @return Facebook
+     	*/
 	public Facebook getFacebook() {
 		return facebook;
 	}
+
+	/**
+     	* Realiza a conecção do app com o Facebook
+     	* @return boolean
+     	*/
 	public boolean login() {
 		facebook = new FacebookFactory().getInstance();
 		facebook.setOAuthAppId("203900246459306",
@@ -43,6 +52,10 @@ public class FacebookLogin {
 		return true;
 	}
 
+	/**
+     	* Abre o browser padrão da máquina para a criação do token de acesso
+     	* @param Facebook
+     	*/
 	void facebookTokenGenerator(Facebook fb) {
 
 		Desktop desktop = Desktop.getDesktop();
@@ -57,6 +70,11 @@ public class FacebookLogin {
 		}
 	}
 
+	/**
+     	* Retorna o token retirado da URL aberta pelo método "void facebookTokenGenerator(Facebook fb)"
+     	* @param String contendo a url gerada
+     	* @return String
+     	*/
 	String getFacebookToken(String url)
 	{
 		return url.substring(30);

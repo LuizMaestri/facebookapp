@@ -38,8 +38,7 @@ public class FacebookLogin {
 			System.out.println("Código incorreto");
 		}
 
-		facebook.setOAuthAccessToken(aT);
-		System.out.println(aT.toString());		
+		facebook.setOAuthAccessToken(aT);		
 
 		return true;
 	}
