@@ -4,7 +4,6 @@ import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Scanner;
 
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
@@ -14,7 +13,15 @@ import facebook4j.auth.AccessToken;
 public class FacebookLogin {
 
 	Facebook facebook;
-	Scanner leitor = new Scanner(System.in).useDelimiter(System.getProperty("line.separator"));
+	String token = null;
+	
+	public FacebookLogin()
+	{
+		facebook = new FacebookFactory().getInstance();
+		facebook.setOAuthAppId("203900246459306",
+				"1cd7277edca0e80784ef05fae547b608");
+		facebook.setOAuthPermissions("email,publish_stream,read_stream");
+	}
 	
 	/**
      	* Retorna o atributo facebook da classe FacebookLogin
@@ -23,31 +30,21 @@ public class FacebookLogin {
 	public Facebook getFacebook() {
 		return facebook;
 	}
-
+	
 	/**
      	* Realiza a conecção do app com o Facebook
      	* @return boolean
      	*/
 	public boolean login() {
-		facebook = new FacebookFactory().getInstance();
-		facebook.setOAuthAppId("203900246459306",
-				"1cd7277edca0e80784ef05fae547b608");
-		facebook.setOAuthPermissions("email,publish_stream,read_stream");
-		
-		facebookTokenGenerator(getFacebook());
-		
-		System.out.println("Digite o código (após 'code=') da URL:");
-		
-		String token = getFacebookToken(leitor.nextLine());
-		
+				
 		AccessToken aT = null;
 		try {
-			aT = facebook.getOAuthAccessToken(token);
+			aT = facebook.getOAuthAccessToken(getFacebookToken(getToken()));
 		} catch (FacebookException e) {
 			System.out.println("Código incorreto");
 		}
 
-		facebook.setOAuthAccessToken(aT);		
+		facebook.setOAuthAccessToken(aT);
 
 		return true;
 	}
@@ -56,10 +53,11 @@ public class FacebookLogin {
      	* Abre o browser padrão da máquina para a criação do token de acesso
      	* @param Facebook
      	*/
-	void facebookTokenGenerator(Facebook fb) {
+	void facebookTokenGenerator() {
 
+		Facebook fb = getFacebook();
 		Desktop desktop = Desktop.getDesktop();
-		URI uri;
+		URI uri = null;
 		try {
 			uri = new URI(fb.getOAuthAuthorizationURL("http://www.athom.com.br/"));
 			desktop.browse(uri);
@@ -68,8 +66,9 @@ public class FacebookLogin {
 		} catch (URISyntaxException use) {
 			use.printStackTrace();
 		}
-	}
 
+	}
+	
 	/**
      	* Retorna o token retirado da URL aberta pelo método "void facebookTokenGenerator(Facebook fb)"
      	* @param String contendo a url gerada
@@ -79,4 +78,21 @@ public class FacebookLogin {
 	{
 		return url.substring(30);
 	}
+
+	/**
+     	* Retorna o atributo token da classe FacebookLogin
+     	* @return String
+     	*/
+	public String getToken() {
+		return token;
+	}
+
+	/**
+     	* Set o atributo token da classe FacebookLogin
+     	* @param String contendo o novo token
+     	*/
+	public void setToken(String token) {
+		this.token = token;
+	}
+	
 }

@@ -17,6 +17,11 @@ public class FaceAcitons {
 		leitor = new Scanner(System.in).useDelimiter(System.getProperty("line.separator"));
 	}
 	
+	/**
+     	* Retorna a mensagem a ser postada
+     	* @return String
+     	* @throws PostEmBranco 
+     	*/
 	public String postar() throws PostEmBranco
 	{
 		String s = leitor.next();
@@ -28,6 +33,11 @@ public class FaceAcitons {
 		
 	}
 	
+	/**
+     	* Retorna uma lista com os nomes de 50 amigos
+     	* @param ResponseList<Friend> Com os amigos na conta do usuário
+     	* @return String
+     	*/
 	public String friendList (ResponseList<Friend> friends)
 	{
 		String f = "";
@@ -36,6 +46,11 @@ public class FaceAcitons {
 		return f;
 	}
 
+	/**
+     	* Retorna uma lista com os últimos 10 post do news feed
+     	* @param ResponseList<Post> Com os posts do news feed
+     	* @return String
+     	*/
 	public String newsFeed (ResponseList<Post> feed)
 	{
 		String f = "";
