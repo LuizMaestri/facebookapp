@@ -1,6 +1,6 @@
 package br.ufsc.facebookapp.iu;
 
-import java.util.Scanner;
+import javax.swing.JOptionPane;
 import facebook4j.Friend;
 import facebook4j.ResponseList;
 import facebook4j.api.FriendMethods;
@@ -9,12 +9,9 @@ import br.ufsc.facebookapp.excecoes.PostEmBranco;
 
 public class FaceAcitons {
 
-	Scanner leitor;
-	
-	@SuppressWarnings("resource")
 	public FaceAcitons()
 	{
-		leitor = new Scanner(System.in).useDelimiter(System.getProperty("line.separator"));
+		
 	}
 	
 	/**
@@ -24,7 +21,7 @@ public class FaceAcitons {
      	*/
 	public String postar() throws PostEmBranco
 	{
-		String s = leitor.next();
+		String s = JOptionPane.showInputDialog(null, "O que você está pensando?", "Post", JOptionPane.QUESTION_MESSAGE);
 		s = s.trim();
 		if(s.length() == 0)
 			throw new PostEmBranco();
