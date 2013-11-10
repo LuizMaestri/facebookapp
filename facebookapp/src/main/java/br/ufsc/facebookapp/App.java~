@@ -18,8 +18,7 @@ public class App
 
         final GraphInterface gi = new GraphInterface();
         gi.interajaLog();
-        
-        
+ 
         //if (iu.interfaceLogin() ==1)
         //{
         gi.getButtons()[0].addActionListener(new ActionListener()
@@ -36,17 +35,22 @@ public class App
 	        	{
 	        		final FaceAcitons fc = new FaceAcitons();        	
 	        		final Facebook face = log.getFacebook();
+       				ResponseList<Post> feed = null;
+    				
 	        		try {
-						gi.interajaLoged("Olá " + face.getName());
-					} catch (IllegalStateException e1) {
-						e1.printStackTrace();
-					} catch (FacebookException e1) {
-						gi.erro("Falha na conecção com o Facebook.");
-					}
+					feed = face.getHome();
+				} catch (FacebookException e2) {
+				gi.erro("Falha na conecção com o Facebook.");
+    				}
 	        		
+        			try {
+					gi.interajaLoged(fc.newsFeedOrTimeLine(feed, 2));
+				} catch (IllegalStateException e1) {
+					e1.printStackTrace();
+				}
 	        		
 	        			gi.getButtons()[1].addActionListener(new ActionListener()
-	        	        {
+	        	        	{
 	        	        	
 	        	        	public void actionPerformed(ActionEvent e) 
 	        				{
@@ -56,12 +60,27 @@ public class App
 		    					} catch (FacebookException e2) {
 		    						gi.erro("Falha na conecção com o Facebook.");
 		        				}
-		        				gi.interajaLoged(fc.newsFeed(feed2));
+		        				gi.interajaLoged(fc.newsFeed(feed2, 2));
+	        	        	}
+	        			});
+
+					gi.getButtons()[4].addActionListener(new ActionListener()
+	        	        	{
+	        	        	
+	        	        	public void actionPerformed(ActionEvent e) 
+	        				{
+	        	        		ResponseList<Post> feed2 = null;
+		        				try {
+		    						feed2 = face.getFeed();
+		    					} catch (FacebookException e2) {
+		    						gi.erro("Falha na conecção com o Facebook.");
+		        				}
+		        				gi.interajaLoged(fc.newsFeedOrTimeLine(feed2, 1));
 	        	        	}
 	        			});
 	        			
 	        			gi.getButtons()[3].addActionListener(new ActionListener()
-	        	        {
+	        	        	{
 	        	        	
 	        	        	public void actionPerformed(ActionEvent e) 
 	        				{
@@ -80,7 +99,7 @@ public class App
 	        			});
 	        			
 	        			gi.getButtons()[2].addActionListener(new ActionListener()
-	        	        {
+	        	        	{
 	        	        	
 	        	        	public void actionPerformed(ActionEvent e) 
 	        				{

@@ -27,6 +27,7 @@ public class GraphInterface
 		janela.add(painel2,BorderLayout.SOUTH);
 		painel2.add(login);
 		painel2.add(feed);
+		painel2.add(timeline);
 		painel2.add(amigos);
 		painel2.add(postar);
 		painel2.add(sair);
