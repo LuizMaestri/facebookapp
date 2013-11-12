@@ -1,75 +1,117 @@
 package br.ufsc.facebookapp;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-
-import facebook4j.FacebookException;
 import facebook4j.Friend;
 import facebook4j.Group;
+/*import facebook4j.InboxResponseList;
+import facebook4j.Message;*/
+import facebook4j.Poke;
 import facebook4j.Post;
 import facebook4j.ResponseList;
-
+//import br.ufsc.facebookapp.excecoes.NomeErrado;
 import br.ufsc.facebookapp.excecoes.PostEmBranco;
 
 public class FaceAcitons {
-	private HashMap<String,String> friends;
-	private HashMap<String,String> grupos;
 
-	public FaceAcitons() 
-	{
-
-	}
+	HashMap<String,Integer> poker;
+	/*private HashMap<String,Friend> friends;
+	private HashMap<String,Group> grupos;
+	private ResponseList<Friend> friends;
+	private ResponseList<Group> grupos;
+	private String grupoId;
+	private String friendsId;*/
 	
-	public void setGrupos(ResponseList<Group> grupos) 
+ 	public FaceAcitons()
 	{
-		// TODO Auto-generated method stub
-
-		int tam = grupos.size();
-		for (int i = 0; i< tam; i++)
-		{
-			friends.put(grupos.get(i).getName(), grupos.get(i).getId());
-		}
-	}
-
-	/*private void setFriends()
-	{
-		int tam = d.size();
-		for (int i = 0; i< tam; i++)
-		{
-			friends.put(d.get(i).getName(), d.get(i).getId());
-		}
-	}*/
-	
-	/**
-     * Posta uma mensagem na timeline do usuário/amigo/grupo
-     * @param String[] sendo indíce 0 a mensagem e indíce 1 onde será postado, 
-     * 1==null se for na timeline do usuário
-     * @throws PostEmBranco 
-	 * @throws FacebookException 
-     */
-	public String[] postar(String s,String f) throws PostEmBranco
-	{
-		s = s.trim();
-		f = f.trim();
-		String[] v = {s,f};
-		if(s.length() == 0)
-			throw new PostEmBranco();
-		else
-			return v;
 		
 	}
 	
+	 	
+	private HashMap<String, Integer> getPoker() 
+	{
+		return poker;
+	}
+	
+	@SuppressWarnings("null")
+	public String maiorPoker( ResponseList<Poke> pokes, String nome)
+	{
+		int tam = 50;
+		if(pokes.size()<50)
+			tam = pokes.size();
+		ArrayList<String> pk = null;
+		String aux;
+		for(int i = 0; i < tam; i++)
+		{
+			aux = pokes.get(i).getFrom().getName();
+			if(i !=0)
+			{
+				if(aux.equalsIgnoreCase(nome)&& !pk.contains(aux))
+					pk.add(aux);
+				if(!getPoker().containsKey(aux))
+					getPoker().put(aux, 1);
+				else
+					getPoker().put(aux, (getPoker().get(aux).intValue()+1));
+			}
+			else
+				pk.add(aux);
+		}
+		return maiorValor(pk);
+	}
+	
+	private String maiorValor(ArrayList<String> nomes)
+	{
+		int maior = getPoker().get(nomes.get(0));
+		int tam = nomes.size();
+		int aux = 0;
+		String nomeAux; 
+		String nome = null; 
+		for(int i = 1; i < tam; i++)
+		{
+			nomeAux = nomes.get(i);
+			aux = getPoker().get(nome);
+			if(maior < aux)
+			{
+				maior = aux;
+				nome = nomeAux;
+			}
+		}
+		return "Seu maior 'pokeador' é: " + nome + " com " + maior + " pokes.";
+	}
+ 	
+	/**
+     * Posta uma mensagem na timeline do usuário
+     * @param String s mensagem
+     * f==null se for na timeline do usuário
+     * @return String[] sendo:
+     * indíce 0 a mensagem 
+     * @throws PostEmBranco 
+	 */
+	
+	public String postar(String s) throws PostEmBranco
+	{
+		s = s.trim();
+		
+		if(s.length() == 0)
+			throw new PostEmBranco();
+		else
+			return s;
+	}
+    
+
 	/**
      * Retorna uma lista com os nomes de todos amigos
      * @param ResponseList<Friend> Com os amigos na conta do usuário
      * @return String
      */
-	public String friendList (ResponseList<Friend> friends2)
+	public String friendList (ResponseList<Friend> friend)
 	{
-		String f = "Amigos:";
-		int tam = friends2.size();
+		//this.setFriend2(friend);
+		String f = "Amigos:\n";
+		int tam = friend.size();
 		for (int i= 0; i< tam; i++)
 		{
-			f += "\n" + friends2.get(i).getName();
+			f += "\n" + friend.get(i).getName();
 			
 		}
 		return f;
@@ -121,16 +163,15 @@ public class FaceAcitons {
 		}
 		return f;
 	}
-	
+		
 	/**
-     * Retorna uma lista com as últimas mensagens recebidas pelo usuário 
-     * os 20 últimos posts realizados pelo usuário ou postados em sua Timeline
-     * @param ResponseList<Message> Com as mensagens da inbox
+     * Retorna uma lista com as últimas mensagens recebidas pelo usuário
+     * @param InboxResponseList<Message> Com as mensagens da inbox
      * @return String
      */
-	/*public String inbox (ResponseList<Message> inbox)
+	/*public String inbox (InboxResponseList<Message> inbox)
 	{
-		String f="";
+		String f="Inbox:";
 		
 		for (int i= 0; i< 10; i++)
 		{
@@ -147,17 +188,13 @@ public class FaceAcitons {
      * @param ResponseList<Group> Com os grupos do usuário
      * @return String
      */
-	public String grupos (ResponseList<Group> grupos)
+	public String grupos (ResponseList<Group> grupo)
 	{
+		//this.setGroup2(grupo);
 		String g="Grupos: \n";
-		int quant = grupos.size();
+		int quant = grupo.size();
 		for (int i= 0; i< quant; i++)
-		{
-			
-			g += "\n" + grupos.get(i).getName();
-		}
-		//setGrupos(grupos2);
+			g += "\n" + grupo.get(i).getName();
 		return g;
 	}
 }
-

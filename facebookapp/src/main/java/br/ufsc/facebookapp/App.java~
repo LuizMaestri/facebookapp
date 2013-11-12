@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
 import facebook4j.Friend;
+import facebook4j.Group;
+//import facebook4j.Message;
 import facebook4j.Post;
 import facebook4j.ResponseList;
 import br.ufsc.facebookapp.excecoes.*;
@@ -18,39 +20,48 @@ public class App
 
         final GraphInterface gi = new GraphInterface();
         gi.interajaLog();
- 
-        //if (iu.interfaceLogin() ==1)
-        //{
+        
         gi.getButtons()[0].addActionListener(new ActionListener()
         {
         	
         	public void actionPerformed(ActionEvent e) 
 			{
         		// TODO Auto-generated method stub
-				//TextInterface iu = new TextInterface();
 				FacebookLogin log = new FacebookLogin();
 	        	log.facebookTokenGenerator();
 	        	log.setToken(gi.pecaTexto("Insira a URL:"));
 	        	if(log.login())
 	        	{
-	        		final FaceAcitons fc = new FaceAcitons();        	
 	        		final Facebook face = log.getFacebook();
-       				ResponseList<Post> feed = null;
+	        		final FaceAcitons fc = new FaceAcitons();        	
+	        		ResponseList<Group> grupos = null;
     				
 	        		try {
-					feed = face.getHome();
-				} catch (FacebookException e2) {
-				gi.erro("Falha na conecção com o Facebook.");
+	        			grupos = face.getGroups() ;
+					} catch (FacebookException e2) {
+						gi.erro("Falha na conecção com o Facebook.");
+    				}
+	    
+					gi.setGrupos(fc.grupos(grupos));
+					
+	        		
+	        		ResponseList<Post> feed = null;
+    				
+	        		try {
+						feed = face.getHome();
+					} catch (FacebookException e2) {
+						gi.erro("Falha na conecção com o Facebook.");
     				}
 	        		
-        			try {
-					gi.interajaLoged(fc.newsFeedOrTimeLine(feed, 2));
-				} catch (IllegalStateException e1) {
-					e1.printStackTrace();
-				}
+	        		try {
+						gi.interajaLoged(fc.newsFeedOrTimeLine(feed, 2));
+					} catch (IllegalStateException e1) {
+						e1.printStackTrace();
+					}
+	        		
 	        		
 	        			gi.getButtons()[1].addActionListener(new ActionListener()
-	        	        	{
+	        	        {
 	        	        	
 	        	        	public void actionPerformed(ActionEvent e) 
 	        				{
@@ -60,12 +71,12 @@ public class App
 		    					} catch (FacebookException e2) {
 		    						gi.erro("Falha na conecção com o Facebook.");
 		        				}
-		        				gi.interajaLoged(fc.newsFeed(feed2, 2));
+		        				gi.interajaLoged(fc.newsFeedOrTimeLine(feed2, 2));
 	        	        	}
 	        			});
-
-					gi.getButtons()[4].addActionListener(new ActionListener()
-	        	        	{
+	        			
+	        			gi.getButtons()[4].addActionListener(new ActionListener()
+	        	        {
 	        	        	
 	        	        	public void actionPerformed(ActionEvent e) 
 	        				{
@@ -80,26 +91,33 @@ public class App
 	        			});
 	        			
 	        			gi.getButtons()[3].addActionListener(new ActionListener()
-	        	        	{
+	        	        {
 	        	        	
 	        	        	public void actionPerformed(ActionEvent e) 
 	        				{
-	        	        		String s= "";
+	        	        		String[] s= new String [2];
 		        				try{
-		        					s = fc.postar();
-		        			} catch (PostEmBranco e2) {
-		        				gi.erro("Você não pode postar em branco");
-		        			}
-		        				try {
-		        					face.postStatusMessage(s);
-		        				} catch (FacebookException e2) {
-		        					gi.erro("Falha na conecção com o Facebook.");
+		        					s = fc.postar(gi.getTexts()[0], gi.getTexts()[1]);
+		        				} catch (PostEmBranco e2) {
+		        					gi.erro("Você não pode postar em branco");
 		        				}
+		        				if(s[1] == null)
+		        					try {
+		        						face.postStatusMessage(s[0]);//indície 0 sem para mensagem
+		        					} catch (FacebookException e2) {
+		        						gi.erro("Falha na conecção com o Facebook.");
+		        					}
+		        				else 
+		        					try {
+		        						face.postStatusMessage(s[1], s[0]);
+		        					} catch (FacebookException e2) {
+		        						gi.erro("Falha na conecção com o Facebook.");
+		        					}
 	        	        	}
 	        			});
 	        			
 	        			gi.getButtons()[2].addActionListener(new ActionListener()
-	        	        	{
+	        	        {
 	        	        	
 	        	        	public void actionPerformed(ActionEvent e) 
 	        				{
@@ -112,74 +130,9 @@ public class App
 		        				gi.interajaLoged(fc.friendList(d));
 	        	        	}
 	        			});
-	        		
-	        		/*while (true)
-	        		{
-
-	        			switch (iu.interfaceLoged())
-	        			{
-	        			case 1  : {
-	        				iu.sussesso(1);
-	        				ResponseList<Post> feed2 = null;
-	        				try {
-	    						feed2 = face.getHome();
-	    					} catch (FacebookException e2) {
-	    						gi.erro("Falha na conecção com o Facebook.");
-	        				}
-	        				gi.interajaLoged(fc.newsFeed(feed2));
-	        			}
-	        				break;
 	        			
-	        			case 2  :  {
-	        				String s= "";
-	        				try{
-	        					s = fc.postar();
-	        			} catch (PostEmBranco e2) {
-	        				gi.erro("Você não pode postar em branco");
-	        				break;
-	        			}
-	        				try {
-	        					face.postStatusMessage(s);
-	        				} catch (FacebookException e2) {
-	        					gi.erro("Falha na conecção com o Facebook.");
-	        				}
-	        				iu.sussesso(2);
-	        			}
-	        				break;
-	        			
-	        			case 3  :{
-	        				iu.sussesso(3);
-	        				ResponseList<Friend> d = null;
-	        				try {
-	        					d = face.getFriends();
-	        				} catch (FacebookException e2){
-	        					gi.erro("Falha na conecção com o Facebook.");
-	        				}
-	        				gi.interajaLoged(fc.friendList(d));
-	        			}
-	        				break;
-	        			}
-	        		}*/
 	        	}
 			}
         });
     }
 }
-        
-
-        		
-        			
-        			/*case 4  : {
-        				iu.sussesso(4);
-        				System.exit(4);
-        			}
-        				break;
-        				
-        			default  :  System.out.println("digite um valor válido");*/
-        			
-        /*}
-        else
-        {
-        	iu.sussesso(4);
-        	System.exit(2);
-        }*/

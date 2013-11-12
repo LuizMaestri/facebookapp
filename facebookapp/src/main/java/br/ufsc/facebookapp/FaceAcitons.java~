@@ -1,22 +1,25 @@
-package br.ufsc.facebookapp.iu;
+package br.ufsc.facebookapp;
 
-import javax.swing.JOptionPane;
+//import java.util.HashMap;
+
+import facebook4j.FacebookException;
 import facebook4j.Friend;
+import facebook4j.Group;
+import facebook4j.Post;
 import facebook4j.ResponseList;
-import facebook4j.api.FriendMethods;
 
 import br.ufsc.facebookapp.excecoes.PostEmBranco;
 
 public class FaceAcitons {
-	private HashMap<String,String> friends;
-	private HashMap<String,String> grupos;
+	//private HashMap<String,String> friends;
+	//private HashMap<String,String> grupos;
 
 	public FaceAcitons() 
 	{
 
 	}
 	
-	public void setGrupos(ResponseList<Group> grupos) 
+	/*public void setGrupos(ResponseList<Group> grupos) 
 	{
 		// TODO Auto-generated method stub
 
@@ -27,7 +30,7 @@ public class FaceAcitons {
 		}
 	}
 
-	/*private void setFriends()
+	private void setFriends()
 	{
 		int tam = d.size();
 		for (int i = 0; i< tam; i++)
