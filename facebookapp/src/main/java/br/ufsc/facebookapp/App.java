@@ -5,13 +5,10 @@ import java.awt.event.ActionListener;
 
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
-import facebook4j.Friend;
-import facebook4j.Group;
-//import facebook4j.Message;
 import facebook4j.Post;
 import facebook4j.ResponseList;
 import br.ufsc.facebookapp.excecoes.*;
-import br.ufsc.facebookapp.iu.*;
+import br.ufsc.facebookapp.iu.GraphInterface;
 
 public class App 
 {
@@ -34,45 +31,33 @@ public class App
 	        	{
 	        		final Facebook face = log.getFacebook();
 	        		final FaceAcitons fc = new FaceAcitons();        	
-	        		ResponseList<Group> grupos = null;
     				
 	        		try {
-	        			grupos = face.getGroups() ;
+	        			gi.setGrupos(fc.grupos(face.getGroups()));
 					} catch (FacebookException e2) {
 						gi.erro("Falha na conecção com o Facebook.");
     				}
-	    
-					gi.setGrupos(fc.grupos(grupos));
-					
-	        		
-	        		ResponseList<Post> feed = null;
-    				
-	        		try {
-						feed = face.getHome();
+	    	        		
+					ResponseList<Post> feed = null;
+					try {
+    					feed = face.getHome();
 					} catch (FacebookException e2) {
 						gi.erro("Falha na conecção com o Facebook.");
     				}
-	        		
-	        		try {
-						gi.interajaLoged(fc.newsFeedOrTimeLine(feed, 2));
-					} catch (IllegalStateException e1) {
-						e1.printStackTrace();
-					}
-	        		
+					gi.interajaLoged(fc.newsFeedOrTimeLine(feed, 2));
+	        		//gi.interajaLoged("Olá"); //caso haja problema no login descomente essa linha e comente o try acima. 
 	        		
 	        			gi.getMenus()[0].addActionListener(new ActionListener()
 	        	        {
 	        	        	
 	        	        	public void actionPerformed(ActionEvent e) 
 	        				{
-	        	        		ResponseList<Post> feed2 = null;
 		        				try {
-		    						feed2 = face.getHome();
+		        					gi.interajaLoged(fc.newsFeedOrTimeLine(face.getHome(), 2));
 		    					} catch (FacebookException e2) {
 		    						gi.erro("Falha na conecção com o Facebook.");
 		        				}
-		        				gi.interajaLoged(fc.newsFeedOrTimeLine(feed2, 2));
-	        	        	}
+		        			}
 	        			});
 	        			
 	        			gi.getMenus()[2].addActionListener(new ActionListener()
@@ -80,14 +65,12 @@ public class App
 	        	        	
 	        	        	public void actionPerformed(ActionEvent e) 
 	        				{
-	        	        		ResponseList<Post> feed2 = null;
 		        				try {
-		    						feed2 = face.getFeed();
+		        					gi.interajaLoged(fc.newsFeedOrTimeLine(face.getFeed(), 1));
 		    					} catch (FacebookException e2) {
 		    						gi.erro("Falha na conecção com o Facebook.");
 		        				}
-		        				gi.interajaLoged(fc.newsFeedOrTimeLine(feed2, 1));
-	        	        	}
+		        			 }
 	        			});
 	        			
 	        			gi.getButtons()[1].addActionListener(new ActionListener()
@@ -95,57 +78,45 @@ public class App
 	        	        	
 	        	        	public void actionPerformed(ActionEvent e) 
 	        				{
-	        	        		String s = null;
-		        				try{
-		        					s = fc.postar(gi.getTexts()[0]);
+	        	        		try{
+		        					face.postStatusMessage(fc.postar(gi.getTexts()[0]));
 		        				} catch (PostEmBranco e2) {
 		        					gi.erro("Você não pode postar em branco");
-		        				}
-		        				try {
-									face.postStatusMessage(s);
-								} catch (FacebookException e1) {
+		        				}	catch (FacebookException e1) {
 									gi.erro("Falha na conecção com o Facebook.");
 								}
-		        				
-		        			gi.zeraTextos();
+		        				gi.zeraTextos();
 		        			}
 	        	       });
 	        			
 	        			gi.getMenus()[1].addActionListener(new ActionListener()
 	        	        {
-	        	        	
 	        	        	public void actionPerformed(ActionEvent e) 
 	        				{
-	        	        		ResponseList<Friend> friend = null;
-		        				try {
-		        					friend = face.getFriends();
+	        	        		try {
+		        					gi.interajaLoged(fc.friendList(face.getFriends()));
 		        				} catch (FacebookException e2){
 		        					gi.erro("Falha na conecção com o Facebook.");
 		        				}
-		        				gi.interajaLoged(fc.friendList(friend));
-	        	        	}
+		        			}
 	        			});
 	        			
-	        			gi.getButtons()[3].addActionListener(new ActionListener() {
+	        			gi.getMenus()[3].addActionListener(new ActionListener() {
 	        	        	
 	        	        	public void actionPerformed(ActionEvent e) 
 	        				{
-	        	        		ResponseList<Poke> pokes = null;
-		        				try {
-		        					pokes = face.getPokes();
-		        				} catch (FacebookException e2){
-		        					gi.erro("Falha na conecção com o Facebook.");
-		        				}
-		        				try {
-									gi.interajaLoged(fc.maiorPoker(pokes, face.getMe().getName()));
+	        	        		try {
+									gi.interajaLoged(fc.maiorPoker(face.getPokes(), face.getMe().getName()));
 								} catch (FacebookException e1) {
 									gi.erro("Falha na conecção com o Facebook.");
+								} catch (NaoHaPokes e1) {
+									gi.erro("Não há pokes recentes");
 								}
-	        	        	}
+		        			}
 	        			});
-	        			
 	        	}
-		}
+			}
         });
     }
+}
 }

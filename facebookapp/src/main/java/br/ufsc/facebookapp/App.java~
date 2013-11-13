@@ -60,7 +60,7 @@ public class App
 					}
 	        		
 	        		
-	        			gi.getButtons()[1].addActionListener(new ActionListener()
+	        			gi.getMenus()[0].addActionListener(new ActionListener()
 	        	        {
 	        	        	
 	        	        	public void actionPerformed(ActionEvent e) 
@@ -75,7 +75,7 @@ public class App
 	        	        	}
 	        			});
 	        			
-	        			gi.getButtons()[4].addActionListener(new ActionListener()
+	        			gi.getMenus()[2].addActionListener(new ActionListener()
 	        	        {
 	        	        	
 	        	        	public void actionPerformed(ActionEvent e) 
@@ -90,49 +90,62 @@ public class App
 	        	        	}
 	        			});
 	        			
-	        			gi.getButtons()[3].addActionListener(new ActionListener()
+	        			gi.getButtons()[1].addActionListener(new ActionListener()
 	        	        {
 	        	        	
 	        	        	public void actionPerformed(ActionEvent e) 
 	        				{
-	        	        		String[] s= new String [2];
+	        	        		String s = null;
 		        				try{
-		        					s = fc.postar(gi.getTexts()[0], gi.getTexts()[1]);
+		        					s = fc.postar(gi.getTexts()[0]);
 		        				} catch (PostEmBranco e2) {
 		        					gi.erro("Você não pode postar em branco");
 		        				}
-		        				if(s[1] == null)
-		        					try {
-		        						face.postStatusMessage(s[0]);//indície 0 sem para mensagem
-		        					} catch (FacebookException e2) {
-		        						gi.erro("Falha na conecção com o Facebook.");
-		        					}
-		        				else 
-		        					try {
-		        						face.postStatusMessage(s[1], s[0]);
-		        					} catch (FacebookException e2) {
-		        						gi.erro("Falha na conecção com o Facebook.");
-		        					}
-	        	        	}
-	        			});
+		        				try {
+									face.postStatusMessage(s);
+								} catch (FacebookException e1) {
+									gi.erro("Falha na conecção com o Facebook.");
+								}
+		        				
+		        			gi.zeraTextos();
+		        			}
+	        	       });
 	        			
-	        			gi.getButtons()[2].addActionListener(new ActionListener()
+	        			gi.getMenus()[1].addActionListener(new ActionListener()
 	        	        {
 	        	        	
 	        	        	public void actionPerformed(ActionEvent e) 
 	        				{
-	        	        		ResponseList<Friend> d = null;
+	        	        		ResponseList<Friend> friend = null;
 		        				try {
-		        					d = face.getFriends();
+		        					friend = face.getFriends();
 		        				} catch (FacebookException e2){
 		        					gi.erro("Falha na conecção com o Facebook.");
 		        				}
-		        				gi.interajaLoged(fc.friendList(d));
+		        				gi.interajaLoged(fc.friendList(friend));
+	        	        	}
+	        			});
+	        			
+	        			gi.getButtons()[3].addActionListener(new ActionListener() {
+	        	        	
+	        	        	public void actionPerformed(ActionEvent e) 
+	        				{
+	        	        		ResponseList<Poke> pokes = null;
+		        				try {
+		        					pokes = face.getPokes();
+		        				} catch (FacebookException e2){
+		        					gi.erro("Falha na conecção com o Facebook.");
+		        				}
+		        				try {
+									gi.interajaLoged(fc.maiorPoker(pokes, face.getMe().getName()));
+								} catch (FacebookException e1) {
+									gi.erro("Falha na conecção com o Facebook.");
+								}
 	        	        	}
 	        			});
 	        			
 	        	}
-			}
+		}
         });
     }
 }

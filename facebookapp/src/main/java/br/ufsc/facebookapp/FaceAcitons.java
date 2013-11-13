@@ -27,45 +27,83 @@ public class FaceAcitons {
 		
 	}
 	
-	 	
+	/**
+	 * Retorna o atributo poker
+	 * @return HashMap<String, Integer>
+	 */ 	
 	private HashMap<String, Integer> getPoker() 
 	{
 		return poker;
 	}
 	
-	@SuppressWarnings("null")
-	public String maiorPoker( ResponseList<Poke> pokes, String nome)
+	/**
+	 * Adiciona mais um item ao atributo poker
+	 * @param String com a key
+	 * @param Integer com o valor a ser guardado
+	 */ 
+	private void setPoker(String k, Integer i) {
+		getPoker().put(k, i);
+	}
+
+	/**
+	 * Retorna o nome da pessoa que mais deu no usuário pokes e a quantidade de pokes dados
+	 * @note conta somente os últimos 20 pokes não deletados
+	 * @param ResponseList<Poke>
+	 * @param String contendo o nome do usuário
+	 * @return String
+	 * @throws NaoHaPokes
+	 */
+	public String maiorPoker( ResponseList<Poke> pokes, String nome) throws NaoHaPokes
 	{
-		int tam = 50;
-		if(pokes.size()<50)
+		if (pokes == null) throw new NaoHaPokes();
+		int tam = 20;
+		if(pokes.size()<20)
 			tam = pokes.size();
-		ArrayList<String> pk = null;
-		String aux;
+		ArrayList<String> pk = new ArrayList<String>();
+		pk.add(nome);
+		String aux= "";
+		setPoker(nome, 0);
 		for(int i = 0; i < tam; i++)
 		{
 			aux = pokes.get(i).getFrom().getName();
-			if(i !=0)
+			if(i!=0)
 			{
 				if(aux.equalsIgnoreCase(nome)&& !pk.contains(aux))
 					pk.add(aux);
 				if(!getPoker().containsKey(aux))
-					getPoker().put(aux, 1);
+					setPoker(aux, 1);
 				else
-					getPoker().put(aux, (getPoker().get(aux).intValue()+1));
+					setPoker(aux, (getPoker().get(aux).intValue()+1));
 			}
 			else
-				pk.add(aux);
+			{
+				if (!aux.equalsIgnoreCase(nome))
+				{
+					pk.remove(0);
+					pk.add(aux);
+					setPoker(pk.get(0),1);
+				}
+			}
 		}
+		
+		getPoker().remove(nome);
+		
 		return maiorValor(pk);
 	}
 	
+	/**
+	 * Pesquisa no atributo poker o nome do maior 'poker' do usuário e a quantidade de pokes
+	 * @param ArrayList<String>
+	 * @return String
+	 */
 	private String maiorValor(ArrayList<String> nomes)
 	{
 		int maior = getPoker().get(nomes.get(0));
-		int tam = nomes.size();
+		int tam = (nomes.size()-1);
+		if (tam == 1) tam =2;
 		int aux = 0;
 		String nomeAux; 
-		String nome = null; 
+		String nome = nomes.get(0); 
 		for(int i = 1; i < tam; i++)
 		{
 			nomeAux = nomes.get(i);
@@ -76,7 +114,7 @@ public class FaceAcitons {
 				nome = nomeAux;
 			}
 		}
-		return "Seu maior 'pokeador' é: " + nome + " com " + maior + " pokes.";
+		return "Seu maior 'pokeador' é: " + nome + " com " + maior + " poke(s).";
 	}
  	
 	/**
