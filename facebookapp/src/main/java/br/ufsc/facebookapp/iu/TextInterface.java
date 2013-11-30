@@ -3,6 +3,8 @@ package br.ufsc.facebookapp.iu;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import facebook4j.FacebookException;
+
 public class TextInterface 
 {
 	Scanner leitor;
@@ -11,11 +13,11 @@ public class TextInterface
 	{
 		leitor = new Scanner(System.in).useDelimiter(System.getProperty("line.separator"));
 	}
-
+	
 	/**
-     	* Pede que o usuário digite o número de uma das opções mostradas
-     	* @return INT
-     	*/
+     * Pede que o usuário digite o número de uma das opções mostradas
+     * @return int
+     */
 	public int interfaceLogin()
 	{
 		int resp = 0;
@@ -26,6 +28,7 @@ public class TextInterface
 		System.out.println("2 - Sair");
 		while (continua)
 		{
+			
 			try{
 				test = leitor.nextInt();
 			} catch (InputMismatchException e){
@@ -45,9 +48,9 @@ public class TextInterface
 	}
 	
 	/**
-     	* Pede que o usuário digite o número de uma das opções mostradas
-     	* @return int
-     	*/
+     * Pede que o usuário digite o número de uma das opções mostradas
+     * @return int
+     */
 	public int interfaceLoged() 
 	{
 		int resp = 0;
@@ -82,9 +85,9 @@ public class TextInterface
 	}
 	
 	/**
-     	* Mostra ao úsuario uma mensagem de sussesso na escolha da opção
-     	* @param INT da opção da mensagem a ser mostrada
-     	*/
+     * Mostra ao úsuario uma mensagem de sussesso na escolha da opção
+     * @param INT da opção da mensagem a ser mostrado
+     */
 	public void sussesso (int f)
 	{
 		switch(f)
