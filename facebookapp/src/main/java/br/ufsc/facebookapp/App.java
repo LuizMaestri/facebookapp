@@ -33,6 +33,9 @@ class App{
 		logar();
 	}
 	
+	/**
+	 * realiza o login e set de demais funções
+	 */
 	private void logar() {
 		gi.getButtons()[0].addActionListener(new ActionListener(){
 
@@ -57,52 +60,66 @@ class App{
 			}
 		});
 	}
+
 	/**
-	 * set da função do botão postar
+	 * set da função dos botões postar e foto
 	 * @param usuario
+	 * @param jButtons 
 	 */
-	private void post(User usuario)	{
-		gi.getButtons()[1].addActionListener(new ActionListener(){
+	private void post(User usuario, JButton[] jButtons)	{
+		
+		jButtons[1].addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent e) {
-				try{
-					String[] p = fc.postar(gi.getTexts(), face.getMe().getId());
-					face.postStatusMessage(p[1],p[0]);
-				} catch (PostEmBranco e2) {
-					gi.erro("Você não pode postar em branco");
-				}	catch (FacebookException e1) {
-					gi.erro("Falha na conecção com o Facebook.");
-				} catch (NomeErrado e1) {
-					gi.erro("Você digitou o nome errado.");
+				if(clicado) {
+					postarFoto();
+					clicado = false;
 				}
-				gi.zeraTextos();
+				else postarMensagem();
 			}
+
+		});
+		
+		jButtons[2].addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				up = new UploadDownload();
+				gi.setLocal(up.upFoto());
+				clicado = true;
+			}
+			
 		});
 	}
+	
 	/**
-	 * Pré-busca de grupos, amigos e news feed do usuário após o login
+	 * posta uma foto na timeline do usuário
 	 */
-	private void posLog(){
+	private void postarFoto() {
 		try {
-			gi.setGrupos(fc.grupos(face.getGroups()));
-		} catch (FacebookException e2) {
+			face.postPhoto(new PhotoUpdate(new Media(up.getArquivo())));
+		} catch (FacebookException e) {
 			gi.erro("Falha na conecção com o Facebook.");
 		}
-
-		ResponseList<Post> feed = null;
+		gi.zeraTextos();
 		
-		try {
-			feed = face.getHome();
-		} catch (FacebookException e2) {
+	}	
+	
+	/**
+	 * posta uma mensagem na timeline do usuário
+	 */
+	private void postarMensagem() {
+		try{
+			String[] p = fc.postar(gi.getTexts(), face.getMe().getId());
+			face.postStatusMessage(p[1],p[0]);
+		} catch (PostEmBranco e2) {
+			gi.erro("Você não pode postar em branco");
+		}	catch (FacebookException e1) {
 			gi.erro("Falha na conecção com o Facebook.");
+		} catch (NomeErrado e1) {
+			gi.erro("Você digitou o nome errado.");
 		}
-		gi.interajaLoged(fc.newsFeedOrTimeLine(feed, 2));
-		
-		try {
-			fc.setFriends(face.getFriends());
-		} catch (FacebookException e2){
-			gi.erro("Falha na conecção com o Facebook.");
-		}
+		gi.zeraTextos();
 		
 	}
 	

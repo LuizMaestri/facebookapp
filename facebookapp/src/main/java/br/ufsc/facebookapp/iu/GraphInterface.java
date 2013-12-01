@@ -22,7 +22,7 @@ public class GraphInterface extends JFrame{
 	private JButton login = new JButton("Log in");
 	private JButton sair = new JButton("Sair");
 	private JButton postar = new JButton("Postar");
-	private JButton direcao = new JButton("Para:");
+	private JButton foto = new JButton("Foto");
 
 	private JMenuItem feed = new JMenuItem("Feed");
 	private JMenuItem timeline = new JMenuItem("Timeline");
@@ -36,19 +36,13 @@ public class GraphInterface extends JFrame{
 	private JMenu extras = new JMenu("Extras");
 
 	private JTextField post = new JTextField(45);
-	private JTextField para = new JTextField(20);
+	private JTextField local = new JTextField(20);
 
 	private JTextArea mensagens = new JTextArea(40,70);
 	private JTextArea grupos = new JTextArea(20,20);
 
 	private JScrollPane barra = new JScrollPane(mensagens, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	private JScrollPane barra2 = new JScrollPane(grupos, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
-/*	private PesquisaGraph janelaPesquisa;
-
-	public void setJanelaPesquisa(PesquisaGraph janelaPesquisa) {
-		this.janelaPesquisa = janelaPesquisa;
-	}*/
 
 	public GraphInterface (){
 		super("Tretas APP");
@@ -67,8 +61,8 @@ public class GraphInterface extends JFrame{
 		add(painel2, BorderLayout.SOUTH);
 		painel.add(post, BorderLayout.NORTH);
 		painel.add(postar, BorderLayout.NORTH);
-		painel.add(direcao, BorderLayout.SOUTH);
-		painel.add(para, BorderLayout.SOUTH);
+		painel.add(foto, BorderLayout.SOUTH);
+		painel.add(local, BorderLayout.SOUTH);
 		painel2.add(login, BorderLayout.SOUTH);
 		painel2.add(sair, BorderLayout.SOUTH);
 		add(painel);
@@ -85,18 +79,6 @@ public class GraphInterface extends JFrame{
 				System.exit(0);
 			}
 		});
-
-		direcao.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent arg0) {
-				para.setVisible(true);
-			}
-		});
-		
-		/*pesquisa.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent arg0) {
-				janelaPesquisa.setVisible(true);
-			}
-		});*/
 	}
 
 	/**
@@ -104,8 +86,7 @@ public class GraphInterface extends JFrame{
 	 */
 	private void setToolTip(){
 		post.setToolTipText("O que você pensando?");
-		para.setToolTipText("Digite o nome do contato/grupo onde quer postar");
-		direcao.setToolTipText("Função desativada");
+		foto.setToolTipText("Marcantes momentos");
 		pesquisa.setToolTipText("Pesquise novas pessoas");
 		maiorPoke.setToolTipText("Descubra quem te deu mais pokes atualmente");
 		desativar.setToolTipText("Desativa o Tretas App na conta do usuário");
@@ -113,10 +94,10 @@ public class GraphInterface extends JFrame{
 
 	/**
 	 * Retorna os JButtons em um array
-	 * @return Button[] na ordem {login, postar}
+	 * @return Button[] na ordem {login, postar, foto}
 	 */
 	public JButton[] getButtons(){
-		JButton[] jb = {login,  postar};
+		JButton[] jb = {login,  postar, foto};
 		return jb;
 	}
 
@@ -127,6 +108,11 @@ public class GraphInterface extends JFrame{
 	public JMenuItem[] getMenus(){
 		JMenuItem[] menus = {feed, amigos, timeline, maiorPoke, inbox, desativar, pesquisa};
 		return menus;
+	}
+
+	public void setLocal(String pasta) {
+		local.setText(pasta);
+		local.setVisible(true);
 	}
 
 	/**
@@ -142,7 +128,7 @@ public class GraphInterface extends JFrame{
 	 */
 	public void zeraTextos(){
 		post.setText("");
-		para.setText("");
+		local.setText("");
 	}
 
 	/**
@@ -166,8 +152,8 @@ public class GraphInterface extends JFrame{
 		barra.setVisible(true);
 		barra2.setVisible(false);
 		post.setVisible(false);
-		para.setVisible(false);
-		direcao.setVisible(false);
+		local.setVisible(false);
+		foto.setVisible(false);
 	}
 
 	/**
@@ -179,9 +165,9 @@ public class GraphInterface extends JFrame{
 		menu.setVisible(true);
 		postar.setVisible(true);
 		post.setVisible(true);
-		para.setVisible(false);
+		local.setVisible(false);
 		barra2.setVisible(true);
-		direcao.setVisible(true);
+		foto.setVisible(true);
 		painel2.setVisible(false);
 	}
 
@@ -210,34 +196,13 @@ public class GraphInterface extends JFrame{
 	public int aviso(String s){
 		return JOptionPane.showConfirmDialog(null, s, "Aviso", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 	}
+	
+	/**
+	 * Retorna os textos dos JTextFields na ordem {post, local}
+	 * @return String[]
+	 */
 	public String[] getTexts(){
-		String[] jt = {post.getText(),para.getText()};
+		String[] jt = {post.getText(),local.getText()};
 		return jt;
 	}
-}();
-		sexo = this.setJComboBox(new JComboBox(),"Sexo,Feminino,Masculino".split("\\,") );
-		idade = this.setJComboBox(new JComboBox(), "Idade,13-17,18-25,26-30,30-40,40+".split("\\,"));
-		relacionamento = this.setJComboBox(new JComboBox(), "Relacionamento,Solteiro,Noivo,Viúvo,Relacionamento Aberto,Namorando,Separado,Divorciado".split("\\,"));
-		cidadeNatal = this.setJComboBox(new JComboBox(), cno);
-		cidadeAtual = this.setJComboBox(new JComboBox(), cao);
-		trabalho = this.setJComboBox(new JComboBox(), to);
-		colegio = this.setJComboBox(new JComboBox(), co);
-		nome = new JTextField (25);
-		pesquisa = new JButton("Pesquisar");
-		
-	}
-	
-	private JComboBox setJComboBox (JComboBox jcb, String[] opcoes)
-	{
-		int tam = opcoes.length;
-		for(int i = 0; i< tam; i++)
-			jcb.addItem(opcoes[i]);
-		return jcb;
-	}
-	
-	public String getItemSelecionado (JCheckBox jcb)
-	{
-		return jcb.getSelectedObjects().toString();
-	}
 }
-
